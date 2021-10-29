@@ -74,3 +74,5 @@ function getToken(authHeader: string): string {
 
   return token
 }
+
+export const main = handler;

@@ -1,6 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
+import auth from '@functions/auth';
 
 const serverlessConfiguration: AWS = {
   service: 'backend',
@@ -33,7 +34,10 @@ const serverlessConfiguration: AWS = {
     ]
   },
   // import the function via paths
-  functions: { hello },
+  functions: {
+    hello,
+    auth
+  },
   resources: {
     Resources: {
       GatewayResponseDefault4XX: {
