@@ -2,6 +2,7 @@ import type { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
 import auth from '@functions/auth';
+import getTodos from '@functions/getTodos';
 
 const serverlessConfiguration: AWS = {
   service: 'backend',
@@ -39,7 +40,8 @@ const serverlessConfiguration: AWS = {
   // import the function via paths
   functions: {
     hello,
-    auth
+    auth,
+    getTodos
   },
   resources: {
     Resources: {
