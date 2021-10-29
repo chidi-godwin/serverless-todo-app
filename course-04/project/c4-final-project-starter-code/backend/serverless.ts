@@ -25,12 +25,15 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
+    stage: "${opt:stage, 'dev'}",
+    region: 'us-east-1',
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      TODO_TABLE: 'todo-table-${self:provider.stage}'
     },
     lambdaHashingVersion: '20201221',
-    iamRoleStatements: [
+    iamRoleStatements: [ 
     ]
   },
   // import the function via paths
@@ -54,6 +57,33 @@ const serverlessConfiguration: AWS = {
           }
         }
       },
+      TodosTable: {
+        Type: 'AWS::DynamoDB::Table',
+        Properties: {
+          AttributeDefinitions: [
+            {
+              AttributeName: 'userId',
+              AttributeType: 'S'
+            },
+            {
+              AttributeName: 'todoId',
+              AttributeType: 'S'
+            }
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'userId',
+              KeyType: 'HASH'
+            },
+            {
+              AttributeName: 'todoId',
+              KeyType: 'RANGE'
+            }
+          ],
+          BillingMode: 'PAY_PER_REQUEST',
+          TableName: '${self:provider.environment.TODO_TABLE}'
+        }
+      }
     }
   }
 };
