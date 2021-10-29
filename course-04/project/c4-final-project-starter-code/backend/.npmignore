@@ -7,7 +7,3 @@ jspm_packages
 
 # Webpack directories
 .webpack
-
-# Local DynamoDb
-.dynamodb
-backend.bak
