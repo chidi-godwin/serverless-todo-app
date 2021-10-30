@@ -33,7 +33,7 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       TODO_TABLE: 'todo-table-${self:provider.stage}',
-      TODO_BUCKET: 'todo-bucket-${self:provider.stage}'
+      TODO_BUCKET: 'gnc-todo-bucket-${self:provider.stage}'
     },
     tracing: {
       lambda: true,
