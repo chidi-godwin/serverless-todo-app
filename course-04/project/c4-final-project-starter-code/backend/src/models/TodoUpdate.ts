@@ -1,5 +1,7 @@
+import { AttributeValue } from "@aws-sdk/client-dynamodb";
+
 export interface TodoUpdate {
-  name: string
-  dueDate: string
-  done: boolean
+  task?: AttributeValue;
+  done?: AttributeValue;
+  dueDate?: AttributeValue
 }

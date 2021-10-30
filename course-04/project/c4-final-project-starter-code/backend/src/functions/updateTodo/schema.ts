@@ -20,8 +20,17 @@ export default {
             },
             additionalProperties: false,
             required: ["S"]
+        },
+        done: {
+            type: "object",
+            properties: {
+                BOOL: {
+                    type: "boolean"
+                }
+            },
+            additionalProperties: false,
+            required: ["BOOL"]
         }
     },
-    required: ["task", "dueDate"],
     additionalProperties: false
 } as const;

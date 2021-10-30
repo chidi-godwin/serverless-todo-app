@@ -4,6 +4,8 @@ import { parseUserId } from "src/auth/utils";
 import { CreateTodoRequest } from "src/requests/CreateTodoRequest";
 
 import * as uuid from 'uuid'
+import { UpdateTodoRequest } from "src/requests/UpdateTodoRequest";
+import { TodoUpdate } from "src/models/TodoUpdate";
 
 const todoAccess = new TodoAccess()
 const s3BucketName = process.env.TODO_BUCKET
@@ -24,4 +26,9 @@ export async function createTodo(req: CreateTodoRequest, token: string): Promise
         attachmentUrl: { S: `https://${s3BucketName}.s3.amazonaws.com/${todoId}`},
         ...req
     })
+}
+
+export async function updateTodo(req: UpdateTodoRequest, todoId: string, token: string): Promise<TodoUpdate> {
+    const userId = parseUserId(token)
+    return await todoAccess.updateTodo(req, todoId, userId)
 }
