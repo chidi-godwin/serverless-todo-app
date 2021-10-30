@@ -5,7 +5,7 @@ export default {
     events: [
         {
             http: {
-                method: 'get',
+                method: 'post',
                 path: 'todos/{todoId}/attachment',
                 cors: true,
                 authorizer: 'auth',
