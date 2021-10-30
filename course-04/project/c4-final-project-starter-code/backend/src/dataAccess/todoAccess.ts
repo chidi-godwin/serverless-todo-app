@@ -1,5 +1,5 @@
 import * as AWSXRAY from 'aws-xray-sdk'
-import { DynamoDBClient, QueryCommand, QueryCommandInput } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, PutItemCommand, PutItemCommandInput, QueryCommand, QueryCommandInput } from '@aws-sdk/client-dynamodb'
 import { TodoItem } from 'src/models/TodoItem'
 
 const XDBClient = AWSXRAY.captureAWSv3Client(new DynamoDBClient({region: 'us-east-1'}))
@@ -27,5 +27,18 @@ export class TodoAccess {
         console.log(items)
 
         return items as TodoItem[]
+    }
+
+    async createTodo(todo: TodoItem): Promise<TodoItem> {
+        console.log('Creating a new todo')
+
+        const params: PutItemCommandInput = {
+            TableName: this.todoTable,
+            Item: todo
+        }
+        const result = await this.client.send(new PutItemCommand(params));
+        console.log(result)
+        
+        return todo
     }
 }

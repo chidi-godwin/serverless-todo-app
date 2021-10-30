@@ -3,6 +3,7 @@ import type { AWS } from '@serverless/typescript';
 import hello from '@functions/hello';
 import auth from '@functions/auth';
 import getTodos from '@functions/getTodos';
+import createTodo from '@functions/createTodo';
 
 const serverlessConfiguration: AWS = {
   service: 'backend',
@@ -31,17 +32,21 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
-      TODO_TABLE: 'todo-table-${self:provider.stage}'
+      TODO_TABLE: 'todo-table-${self:provider.stage}',
+      TODO_BUCKET: 'todo-bucket-${self:provider.stage}'
+    },
+    tracing: {
+      lambda: true,
+      apiGateway: true
     },
     lambdaHashingVersion: '20201221',
-    iamRoleStatements: [ 
-    ]
   },
   // import the function via paths
   functions: {
     hello,
     auth,
-    getTodos
+    getTodos,
+    createTodo
   },
   resources: {
     Resources: {
@@ -84,6 +89,47 @@ const serverlessConfiguration: AWS = {
           ],
           BillingMode: 'PAY_PER_REQUEST',
           TableName: '${self:provider.environment.TODO_TABLE}'
+        }
+      },
+      AttachmentsBucket: {
+        Type: 'AWS::S3::Bucket',
+        Properties: {
+          BucketName: '${self:provider.environment.TODO_BUCKET}',
+          CorsConfiguration: {
+            CorsRules: [
+              {
+                AllowedOrigins: ['*'],
+                AllowedHeaders: ['*'],
+                AllowedMethods: [
+                  'GET',
+                  'PUT',
+                  'POST',
+                  'DELETE',
+                  'HEAD'
+                ],
+                MaxAge: 3000
+              }
+            ]
+          }
+        }
+      },
+      BucketPolicy: {
+        Type: 'AWS::S3::BucketPolicy',
+        Properties: {
+          PolicyDocument: {
+            Id: 'MyPolicy',
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Sid: 'PublicReadForGetBucketObjects',
+                Effect: 'Allow',
+                Principal: '*',
+                Action: 's3:GetObject',
+                Resource: 'arn:aws:s3:::${self:provider.environment.TODO_BUCKET}/*'
+              }
+            ]
+          },
+          Bucket: {"Ref": "AttachmentsBucket"}
         }
       }
     }
