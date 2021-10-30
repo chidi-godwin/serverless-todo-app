@@ -1,5 +1,5 @@
 import * as AWSXRAY from 'aws-xray-sdk'
-import { DynamoDBClient, PutItemCommand, PutItemCommandInput, QueryCommand, QueryCommandInput, UpdateItemCommand, UpdateItemCommandInput } from '@aws-sdk/client-dynamodb'
+import { DeleteItemCommand, DeleteItemCommandInput, DynamoDBClient, PutItemCommand, PutItemCommandInput, QueryCommand, QueryCommandInput, UpdateItemCommand, UpdateItemCommandInput } from '@aws-sdk/client-dynamodb'
 import { TodoItem } from 'src/models/TodoItem'
 import { TodoUpdate } from 'src/models/TodoUpdate';
 
@@ -65,5 +65,20 @@ export class TodoAccess {
         console.log(result)
 
         return result.Attributes as TodoUpdate
+    }
+
+    async deleteTodo(todoId: string, userId: string): Promise<void> {
+        console.log('deleting todo');
+
+        const params: DeleteItemCommandInput = {
+            TableName: this.todoTable,
+            Key: {
+                userId: { S: userId },
+                todoId: { S: todoId }
+            }
+        }
+
+        await this.client.send(new DeleteItemCommand(params));
+        return
     }
 }

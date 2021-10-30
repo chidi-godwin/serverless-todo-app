@@ -32,3 +32,8 @@ export async function updateTodo(req: UpdateTodoRequest, todoId: string, token: 
     const userId = parseUserId(token)
     return await todoAccess.updateTodo(req, todoId, userId)
 }
+
+export async function deleteTodo(todoId: string, token: string): Promise<void> {
+    const userId = parseUserId(token);
+    return todoAccess.deleteTodo(todoId, userId);
+}

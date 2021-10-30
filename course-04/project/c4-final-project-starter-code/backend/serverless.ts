@@ -5,6 +5,7 @@ import auth from '@functions/auth';
 import getTodos from '@functions/getTodos';
 import createTodo from '@functions/createTodo';
 import updateTodo from '@functions/updateTodo';
+import deleteTodo from '@functions/deleteTodo';
 
 const serverlessConfiguration: AWS = {
   service: 'backend',
@@ -48,7 +49,8 @@ const serverlessConfiguration: AWS = {
     auth,
     getTodos,
     createTodo,
-    updateTodo
+    updateTodo,
+    deleteTodo
   },
   resources: {
     Resources: {
