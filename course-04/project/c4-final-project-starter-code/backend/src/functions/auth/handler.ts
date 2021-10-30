@@ -3,6 +3,7 @@ import { verify } from 'jsonwebtoken'
 import { createLogger } from '@libs/logger'
 import Axios from 'axios'
 import { JwtPayload } from 'src/auth/JwtPayload'
+const jwkToPem = require('jwk-to-pem')
 
 const logger = createLogger('auth')
 
@@ -55,11 +56,10 @@ async function verifyToken(authHeader: string): Promise<JwtPayload> {
   try {
     const token = getToken(authHeader)
     const response = await Axios.get(jwksUrl);
-    const cert = response.data.keys[0].x5c[0];
-
-    return verify(token, cert, { algorithms: ['RS256'] }) as JwtPayload
+    const cert = response.data.keys[0];
+    return verify(token, jwkToPem(cert), { algorithms: ['RS256'] }) as JwtPayload
   } catch (e) {
-    console.log(e)
+    logger.error('Token not verified', { error: e.message })
   }
 }
 
