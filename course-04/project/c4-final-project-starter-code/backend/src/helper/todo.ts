@@ -37,3 +37,7 @@ export async function deleteTodo(todoId: string, token: string): Promise<void> {
     const userId = parseUserId(token);
     return todoAccess.deleteTodo(todoId, userId);
 }
+
+export async function getUploadUrl(todoId: string): Promise<string> {
+    return todoAccess.generateUplaodUrl(todoId)
+}

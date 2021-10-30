@@ -6,6 +6,7 @@ import getTodos from '@functions/getTodos';
 import createTodo from '@functions/createTodo';
 import updateTodo from '@functions/updateTodo';
 import deleteTodo from '@functions/deleteTodo';
+import getUploadUrl from '@functions/getUploadUrl';
 
 const serverlessConfiguration: AWS = {
   service: 'backend',
@@ -35,7 +36,8 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
       TODO_TABLE: 'todo-table-${self:provider.stage}',
-      TODO_BUCKET: 'gnc-todo-bucket-${self:provider.stage}'
+      TODO_BUCKET: 'gnc-todo-bucket-${self:provider.stage}',
+      SIGNED_URL_EXPIRATION: '300'
     },
     tracing: {
       lambda: true,
@@ -50,7 +52,8 @@ const serverlessConfiguration: AWS = {
     getTodos,
     createTodo,
     updateTodo,
-    deleteTodo
+    deleteTodo,
+    getUploadUrl
   },
   resources: {
     Resources: {

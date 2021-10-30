@@ -2,13 +2,19 @@ import * as AWSXRAY from 'aws-xray-sdk'
 import { DeleteItemCommand, DeleteItemCommandInput, DynamoDBClient, PutItemCommand, PutItemCommandInput, QueryCommand, QueryCommandInput, UpdateItemCommand, UpdateItemCommandInput } from '@aws-sdk/client-dynamodb'
 import { TodoItem } from 'src/models/TodoItem'
 import { TodoUpdate } from 'src/models/TodoUpdate';
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { S3Client, PutObjectCommand, PutObjectCommandInput } from "@aws-sdk/client-s3";
 
 const XDBClient = AWSXRAY.captureAWSv3Client(new DynamoDBClient({region: 'us-east-1'}))
+const XS3Client = AWSXRAY.captureAWSv3Client(new S3Client({ region: 'us-east-1'}))
 
 export class TodoAccess {
     constructor (
         private readonly client: DynamoDBClient = XDBClient,
         private readonly todoTable = process.env.TODO_TABLE,
+        private readonly s3Client: S3Client = XS3Client,
+        private readonly todoBucket = process.env.TODO_BUCKET,
+        private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION
     ) {}
 
     async getAllTodo(userId: string): Promise<TodoItem[]> {
@@ -80,5 +86,19 @@ export class TodoAccess {
 
         await this.client.send(new DeleteItemCommand(params));
         return
+    }
+
+    async generateUplaodUrl(todoId: string): Promise<string> {
+        console.log('Generating Url')
+
+        const params: PutObjectCommandInput = {
+            Bucket: this.todoBucket,
+            Key: todoId
+        }
+
+        const command = new PutObjectCommand(params);
+        const url: string = await getSignedUrl(this.s3Client, command, {expiresIn: parseInt(this.urlExpiration)})
+
+        return url
     }
 }
