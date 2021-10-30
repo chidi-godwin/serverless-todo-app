@@ -1,4 +1,4 @@
 export interface CreateTodoRequest {
-  name: string
-  dueDate: string
+  task: { S: string }
+  dueDate: { S: string }
 }

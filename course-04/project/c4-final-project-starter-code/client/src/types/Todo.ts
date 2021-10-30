@@ -1,8 +1,8 @@
 export interface Todo {
-  todoId: string
-  createdAt: string
-  name: string
-  dueDate: string
-  done: boolean
-  attachmentUrl?: string
+  todoId: { S : string }
+  createdAt: { S: string }
+  task: {S: string }
+  dueDate: { S : string }
+  done: { BOOL: boolean }
+  attachmentUrl?: {S: string }
 }

@@ -1,5 +1,5 @@
 export interface UpdateTodoRequest {
-  name: string
-  dueDate: string
-  done: boolean
+  task: { S: string }
+  dueDate: { S: string }
+  done: { BOOL: boolean }
 }
